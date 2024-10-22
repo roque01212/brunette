@@ -1,0 +1,84 @@
+{% extends "panel.html" %}
+{% load  static %}
+
+{% block panel-content %}
+<!-- 
+<div class="grid-x grid-margin-x align-center">
+  <h3 class="cell" style="margin-bottom: 1em; text-align: center;">Usuarios del Sistema</h3>  
+  <table class="cell">
+      <thead>
+          <th>Email</th>
+          <th>Nombres</th>
+          <th>Ultima Conexion</th>
+          <th>Permisos</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+      </thead>
+      <tbody>
+        {% for usuario in usuarios %}
+          <tr>
+            <td>{{ usuario.email }}</td>
+            <td>{{ usuario.full_name }}</td>
+            <td>{{ usuario.last_login }}</td>
+            <td>{{ usuario.get_ocupation_display }}</td>
+            <td>
+              {% if usuario.is_active %}
+                <span class="label success">Activo</span>
+              {% else %}
+                <span class="label alert">De Baja</span>
+              {% endif %}
+            </td>
+            <td>
+            <a href="#" class="button warning"><i class="fi-pencil"></i></a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+
+  <div class="cell">
+    <a href="#" class="cell button">Agregar Nuevo Usuario</a>
+  </div>
+</div> -->
+<div class="d-flex flex-column min-vh-100">
+
+  <div class="container flex-grow-1">
+
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Nombres</th>
+          <th>Ultima Conexion</th>
+          <th>Permisos</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ usuario.email }}</td>
+          <td>{{ usuario.full_name }}</td>
+          <td>{{ usuario.last_login }}</td>
+          <td>{{ usuario.get_ocupation_display }}</td>
+          <td>
+            {% if usuario.is_active %}
+              <span class="bg-secondary">Activo</span>
+            {% else %}
+              <span class="bg-primary">De Baja</span>
+            {% endif %}
+          </td>
+          <td>
+          <a href="#" class="button warning"><i class="fi-pencil"></i></a>
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  <div class="container text-center my-4">
+    <a href="#" class="btn btn-success">Agregar Nuevo Usuario</a>
+  </div>
+</div>
+{% endblock panel-content %}

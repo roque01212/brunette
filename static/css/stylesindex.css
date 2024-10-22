@@ -1,0 +1,42 @@
+/* Estilos personalizados */
+.sidebar {
+    background-color: #333;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+.sidebar h1 {
+    color: orange;
+}
+.sidebar a {
+    color: white;
+    display: block;
+    padding: 10px;
+    margin: 5px 0;
+    text-decoration: none;
+}
+.sidebar a:hover {
+    background-color: orange;
+    color: black;
+}
+.navbar {
+    background-color: #444;
+    color: white;
+    padding: 15px;
+}
+.navbar .btn-salir {
+    background-color: orange;
+    border: none;
+    color: white;
+}
+.content {
+    padding: 30px;
+    
+    
+}
+.welcome-msg {
+    padding: 15px;
+    background-color: #f5deb3;
+    border-radius: 5px;
+    font-size: 18px;
+}

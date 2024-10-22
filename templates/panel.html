@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}  
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/stylesindex.css' %}">
+{% endblock css %}
+    
+
+{% block content %}
+    
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1>Market DJ</h1>
+            <a href="#">Almacen</a>
+            <a href="#">Productos</a>
+            <a href="#">Reportes</a>
+            <div class="mt-3">
+                <h5>Ventas</h5>
+                <a href="#">Vender</a>
+                <a href="#">Cerrar Caja</a>
+            </div>
+            <div class="mt-3">
+                <h5>Administración</h5>
+                <a href="#">Administracion</a>
+                <a href="{% url 'users_app:User-Lista' %}">Usuarios</a>
+                <a href="#">Reportes</a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="flex-grow-1">
+            <!-- Barra superior -->
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container-fluid">
+                    <span class="navbar-text">Sesión de: roque emanuel</span>
+                    <a href="{% url 'users_app:User-Logout' %}" class="btn btn-salir ml-auto">Salir</a>
+                </div>
+            </nav>
+
+            <div class="content container w-300">
+            {% block panel-content %}
+            {% endblock panel-content %}
+            <!-- Contenido principal -->
+                
+            </div>
+        </div>
+    </div>
+    {% endblock content %}
