@@ -34,7 +34,7 @@
             <!-- Barra superior -->
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <div class="container-fluid">
-                    <span class="navbar-text">Sesión de: roque emanuel</span>
+                    <span class="navbar-text">Sesión de: {{ user.full_name }}</span>
                     <a href="{% url 'users_app:User-Logout' %}" class="btn btn-salir ml-auto">Salir</a>
                 </div>
             </nav>
