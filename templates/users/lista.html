@@ -28,9 +28,9 @@
           <td>{{ usuario.get_ocupation_display }}</td>
           <td>
             {% if usuario.is_active %}
-              <span class="bg-success">Activo</span>
+              <span class="bg-success text-white">Activo</span>
             {% else %}
-              <span class="bg-primary">De Baja</span>
+              <span class="bg-warning text-black ">De Baja</span>
             {% endif %}
           </td>
           <td>
@@ -41,7 +41,7 @@
       </tbody>
     </table>
   </div>
-  <div class="container text-center my-4">
+  <div class="container text-center my-4 mt-auto">
     <a href="{% url 'users_app:User-Register' %}" class="btn btn-success">Agregar Nuevo Usuario</a>
   </div>
 </div>
