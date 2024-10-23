@@ -11,7 +11,7 @@ class UserRegisterForm(forms.ModelForm):
         widget=forms.PasswordInput(
             attrs={
                 'placeholder': 'Contraseña',
-                'class': 'input-group-field',
+                'class': 'form-control',
             }
         )
     )
@@ -21,7 +21,7 @@ class UserRegisterForm(forms.ModelForm):
         widget=forms.PasswordInput(
             attrs={
                 'placeholder': 'Repetir Contraseña',
-                'class': 'input-group-field',
+                'class': 'form-control',
             }
         )
     )
@@ -33,6 +33,7 @@ class UserRegisterForm(forms.ModelForm):
         fields = (
             'email',
             'full_name',
+            'domicilio',
             'ocupation',
             'genero',
             'date_birth',
@@ -40,27 +41,36 @@ class UserRegisterForm(forms.ModelForm):
         widgets = {
             'email': forms.EmailInput(
                 attrs={
+                    'type':'email',
                     'placeholder': 'Correo Electronico ...',
-                    'class': 'input-group-field',
+                    'class': 'form-control',
                 }
             ),
             'full_name': forms.TextInput(
                 attrs={
+                    'type':'text',
                     'placeholder': 'Nombres ...',
-                    'class': 'input-group-field',
+                    'class': 'form-control',
+                }
+            ),
+            'domicilio': forms.TextInput(
+                attrs={
+                    'type':'text',
+                    'placeholder': 'Domicilio ...',
+                    'class': 'form-control',
                 }
             ),
             'ocupation': forms.Select(
                 attrs={
                     'placeholder': 'Ocupacion ...',
-                    'class': 'input-group-field',
+                    'class': 'form-control',
                 }
             ),
             'date_birth': forms.DateInput(
                 format='%Y-%m-%d',
                 attrs={
                     'type': 'date',
-                    'class': 'input-group-field',
+                    'class': 'form-control',
                 },
             ),
         }
@@ -92,8 +102,8 @@ class LoginForm(forms.Form):
         )
     )
 
-    def clean(self):
-        cleaned_data = super(LoginForm, self).clean()
+    def clean(self): 
+        self.cleaned_data = super(LoginForm, self).clean()
         email = self.cleaned_data['email']
         password = self.cleaned_data['password']
 

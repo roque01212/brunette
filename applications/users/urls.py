@@ -13,7 +13,7 @@ urlpatterns = [
     path(
         'users/register/', 
         views.UserRegisterView.as_view(),
-        name='user-register',
+        name='User-Register',
     ),
     path(
         'users/logout/', 
@@ -23,12 +23,12 @@ urlpatterns = [
     path(
         'users/update-password/<pk>/', 
         views.UpdatePasswordView.as_view(),
-        name='user-update_password',
+        name='User-Update_Password',
     ),
     path(
         'users/update/<pk>/', 
         views.UserUpdateView.as_view(),
-        name='user-update',
+        name='User-Update',
     ),
     path(
         'users/delete/<pk>/', 

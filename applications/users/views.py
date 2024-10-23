@@ -30,7 +30,7 @@ from .models import User
 class UserRegisterView(FormView):
     template_name = 'users/register.html'
     form_class = UserRegisterForm
-    success_url = reverse_lazy('users_app:user-lista')
+    success_url = reverse_lazy('users_app:User-Lista')
 
     def form_valid(self, form):
         #
@@ -38,6 +38,7 @@ class UserRegisterView(FormView):
             form.cleaned_data['email'],
             form.cleaned_data['password1'],
             full_name=form.cleaned_data['full_name'],
+            domicilio=form.cleaned_data['domicilio'],
             ocupation=form.cleaned_data['ocupation'],
             genero=form.cleaned_data['genero'],
             date_birth=form.cleaned_data['date_birth'],
@@ -77,19 +78,19 @@ class UserUpdateView(UpdateView):
     template_name = "users/update.html"
     model = User
     form_class = UserUpdateForm
-    success_url = reverse_lazy('users_app:user-lista')
+    success_url = reverse_lazy('users_app:User-Lista')
 
 
 class UserDeleteView(DeleteView):
     model = User
-    success_url = reverse_lazy('users_app:user-lista')
+    success_url = reverse_lazy('users_app:User-Lista')
 
 
 class UpdatePasswordView(LoginRequiredMixin, FormView):
     # template_name = 'users/update.html'
     form_class = UpdatePasswordForm
-    success_url = reverse_lazy('users_app:user-login')
-    login_url = reverse_lazy('users_app:user-login')
+    success_url = reverse_lazy('users_app:User-Login')
+    login_url = reverse_lazy('users_app:User-Login')
 
     def form_valid(self, form):
         usuario = self.request.user
