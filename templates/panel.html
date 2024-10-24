@@ -13,11 +13,14 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <h1>Market DJ</h1>
-            <a href="#">Almacen</a>
+            
+            {% if user.is_active %}
+ 
+            <h5>Cocina</h5>
             <a href="#">Productos</a>
             <a href="#">Reportes</a>
             <div class="mt-3">
-                <h5>Ventas</h5>
+                <h5>Caja</h5>
                 <a href="#">Vender</a>
                 <a href="#">Cerrar Caja</a>
             </div>
@@ -27,16 +30,19 @@
                 <a href="{% url 'users_app:User-Lista' %}">Usuarios</a>
                 <a href="#">Reportes</a>
             </div>
-        </div>
-
+        
+        {% endif %}
+    </div>
         <!-- Contenido principal -->
         <div class=" flex-grow-1 ">
             <!-- Barra superior -->
             <nav class="navbar navbar-expand-lg navbar-dark">
+                {% if user.is_active %}
                 <div class="container-fluid">
                     <span class="navbar-text">Sesión de: {{ user.full_name }}</span>
                     <a href="{% url 'users_app:User-Logout' %}" class="btn btn-salir ml-auto">Salir</a>
                 </div>
+                {% endif %}
             </nav>
 
             <div class=" container-fluid  content min-vh-100">

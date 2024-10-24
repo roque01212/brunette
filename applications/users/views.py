@@ -68,7 +68,7 @@ class LogoutView(View):
         logout(request)
         return HttpResponseRedirect(
             reverse(
-                'users_app:user-login'
+                'users_app:User-Login'
             )
         )
 
@@ -108,9 +108,10 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
         return super(UpdatePasswordView, self).form_valid(form)
 
 
-class UserListView(ListView):
+class UserListView(LoginRequiredMixin, ListView):
     template_name = "users/lista.html"
     context_object_name = 'usuarios'
+    login_url = reverse_lazy('users_app:User-Login')
 
     def get_queryset(self):
         return User.objects.usuarios_sistema()

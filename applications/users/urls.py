@@ -8,7 +8,7 @@ urlpatterns = [
     path(
         '', 
         views.LoginUser.as_view(),
-        name='user-login',
+        name='User-Login',
     ),
     path(
         'users/register/', 

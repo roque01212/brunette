@@ -114,7 +114,7 @@ class LoginForm(forms.Form):
 
 
 class UserUpdateForm(forms.ModelForm):
-
+    
     class Meta:
 
         model = User
@@ -125,6 +125,7 @@ class UserUpdateForm(forms.ModelForm):
             'genero',
             'date_birth',
             'is_active',
+
         )
         widgets = {
             'email': forms.EmailInput(
