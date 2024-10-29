@@ -1,0 +1,24 @@
+{% extends 'panel.html' %} 
+{% load static %}
+
+{% block title %}
+  Nueva caja
+{% endblock title %}
+
+
+{% block panel-content %}
+    <form action="" method="POST">{% csrf_token %}
+
+        {{form.monto_inicial_caja}}
+        
+        
+        {% for i in form.monto_inicial_caja.errors %}
+        <p style="color: red;">
+            {{ i|escape }}
+          </p>
+        {% endfor %}
+            
+        <button type="submit" class="btn btn-success">Abrir caja</button>
+    </form>
+{% endblock panel-content %}
+    
