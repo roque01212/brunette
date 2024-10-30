@@ -21,7 +21,7 @@ class Pedidos(models.Model):
     mesa = models.ForeignKey(Mesas, on_delete=models.CASCADE)
     tipo_pago_pedido = models.CharField('Tipo de pago', max_length=2, choices=TIPO_PAGO_CHOICES)
     fecha_hs_pedido = models.DateTimeField(auto_now_add=True)
-    entrega_pedido = models.BooleanField(default=False)
+    pedido_listo = models.BooleanField(default=False)
     pagado_pedido = models.BooleanField(default=False)
 
 
@@ -32,7 +32,7 @@ class Pedidos(models.Model):
         verbose_name_plural = 'Pedidoss'
 
     def __str__(self):
-        return f"pedido de la mesa {self.mesa__num_mesa}"
+        return f"pedido de la mesa {self.mesa}"
     
 
 
@@ -52,7 +52,7 @@ class DetallePedido(models.Model):
     pedido = models.ForeignKey(Pedidos, on_delete=models.CASCADE)
     producto = models.ForeignKey(Productos, on_delete=models.CASCADE)
     total_pedido = models.IntegerField()
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
 
     class Meta:
@@ -66,3 +66,5 @@ class DetallePedido(models.Model):
         self.subtotal = self.total_pedido * self.producto.precio_prod
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.producto.nombre_prod} mesa {self.pedido.mesa.num_mesa}"

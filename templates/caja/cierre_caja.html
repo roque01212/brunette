@@ -3,7 +3,7 @@
 
 {% block panel-content %}
     
-<div class="container ">
+<!-- <div class="container ">
     
     <form action="" class="row" method="POST">{% csrf_token %}
         <div class="col-6">
@@ -16,5 +16,10 @@
         </div>
         <button type="submit" class="btn btn-success mt-5 col-2">Cerrar caja</button>
     </form>
-</div>
+</div> -->
+
+<form action="" method="POST">{% csrf_token %}
+{{form}}
+<button type="submit">ok</button>
+</form>
 {% endblock panel-content %}
