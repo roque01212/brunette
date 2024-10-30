@@ -1,6 +1,6 @@
 from django.db import models
 from applications.caja.models import Caja, Mesas
-
+from .managers import ProductosManager, DetallePedidoManager
 # Create your models here.
 
 class Pedidos(models.Model):
@@ -24,6 +24,8 @@ class Pedidos(models.Model):
     pedido_listo = models.BooleanField(default=False)
     pagado_pedido = models.BooleanField(default=False)
 
+
+    objects = ProductosManager()
 
     class Meta:
         """Meta definition for Pedidos."""
@@ -49,22 +51,19 @@ class Productos(models.Model):
     
 
 class DetallePedido(models.Model):
-    pedido = models.ForeignKey(Pedidos, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(Pedidos, on_delete=models.CASCADE, )
     producto = models.ForeignKey(Productos, on_delete=models.CASCADE)
     total_pedido = models.IntegerField()
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
 
+    objects = DetallePedidoManager()
     class Meta:
         """Meta definition for DetallePedido."""
 
         verbose_name = 'DetallePedido'
         verbose_name_plural = 'DetallePedidos'
 
-    def save(self, *args, **kwargs):
-        # Calcula el subtotal automáticamente
-        self.subtotal = self.total_pedido * self.producto.precio_prod
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.producto.nombre_prod} mesa {self.pedido.mesa.num_mesa}"

@@ -1,6 +1,6 @@
 from django.db import models
 from applications.users.models import User
-from .managers import CajaManager
+from .managers import CajaManager, MesasManager
 
 # Create your models here.
 
@@ -29,6 +29,8 @@ class Caja(models.Model):
 class Mesas(models.Model):
     num_mesa = models.PositiveIntegerField()
     mesa_dispnible = models.BooleanField(default=True)
+
+    objects = MesasManager()
 
     class Meta:
         """Meta definition for Mesas."""

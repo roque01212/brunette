@@ -1,0 +1,38 @@
+<!-- pedido_form.html -->
+{% extends 'panel.html' %}
+
+
+{% block panel-content %}
+
+<h2>Crear Pedido</h2>
+<form method="post">
+    {% csrf_token %}
+    
+    <!-- Formulario del pedido -->
+    {{ form.as_p }}
+
+    <!-- Formset para los productos -->
+    <h3>Agregar Productos</h3>
+    <!-- {{ formset.management_form }} -->
+    <!-- {% for form in formset %} -->
+    <!-- {% endfor %} -->
+    <div id="productos">
+            <div class="producto">
+                {{ formPedido.producto.label_tag }} {{ formPedido.producto }}
+                {{ formPedido.total_pedido.label_tag }} {{ formPedido.total_pedido }}
+            </div>
+    </div>
+
+    <!-- Botones para agregar o eliminar productos -->
+    <button type="button" id="add-product">Agregar Producto</button>
+    <button type="submit" class="btn btn-primary">Crear Pedido</button>
+</form>
+
+<script>
+    // Script para agregar un producto dinámicamente al pedido
+    document.getElementById('add-product').addEventListener('click', function() {
+        let newForm = document.querySelector('.producto').cloneNode(true);
+        document.getElementById('productos').appendChild(newForm);
+    });
+</script>
+{% endblock panel-content %}

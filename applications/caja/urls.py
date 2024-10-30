@@ -15,5 +15,8 @@ urlpatterns = [
         views.CierreCaja.as_view(),
         name='Cierre-caja',
     ),
+    path('caja/crear-pedido/', 
+         views.CrearPedidoView.as_view(), 
+         name='Crear_Pedido'),
 
 ]

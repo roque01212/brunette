@@ -25,3 +25,8 @@ class CajaManager(models.Manager):
             total_egresos=total_egresos,
             total_caja=total_caja
         )
+
+class MesasManager(models.Manager):
+
+    def update_mesa(self, mesa):
+        return self.filter(id = mesa.id).update(mesa_dispnible=False)

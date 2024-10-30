@@ -1,6 +1,6 @@
 from django import forms
-from .models import Caja
-
+from .models import Caja, Mesas
+from applications.cocina.models import Pedidos, DetallePedido, Productos
 class CajaForm(forms.ModelForm):
     class Meta:
         """Meta definition for MODELNAMEform."""
@@ -55,3 +55,45 @@ class CajaUpdateForm(forms.ModelForm):
         if total_egreso <= 0:
             self.add_error('total_egresos', 'El monto debe ser superior a 0')
         return total_egreso
+
+
+
+
+
+
+class PedidoForm(forms.ModelForm):
+    class Meta:
+        model = Pedidos
+        fields = ['mesa', 'tipo_pago_pedido', 'pagado_pedido']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filtrar solo las mesas disponibles
+        self.fields['mesa'].queryset = Mesas.objects.filter(mesa_dispnible=True)
+        
+
+# class DetallePedidoForm(forms.Form):
+#     producto = forms.ModelChoiceField(
+#         queryset=Productos.objects.all(), 
+#         label="Producto",
+#         required=True)
+#     total_pedido = forms.IntegerField(min_value=1, label="Cantidad", required= True)
+
+# producto = forms.ModelChoiceField(
+#         queryset=Productos.objects.all(), 
+#         label="Producto",
+#         widget=forms.Select(attrs={'required': 'required'}))
+#     total_pedido = forms.IntegerField(
+#         widget=forms.NumberInput(attrs={'required': 'required'}),
+#         label='Cantidad'
+#     )
+class DetallePedidoForm(forms.ModelForm):
+    """Form definition for DetallePedido."""
+
+    class Meta:
+        """Meta definition for DetallePedidoform."""
+
+        model = DetallePedido
+        fields = ('producto', 'total_pedido')
+
+
