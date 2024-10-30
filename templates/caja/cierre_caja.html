@@ -1,0 +1,25 @@
+{% extends 'panel.html' %}
+
+
+{% block panel-content %}
+    
+<!-- <div class="container ">
+    
+    <form action="" class="row" method="POST">{% csrf_token %}
+        <div class="col-6">
+        <label class="form-label">Total Ingresos:</label>
+        {{form.total_ingresos}}
+        </div>
+        <div class="col-6">
+            <label class="form-label">Total Egresos:</label>
+            {{form.total_ingresos}}
+        </div>
+        <button type="submit" class="btn btn-success mt-5 col-2">Cerrar caja</button>
+    </form>
+</div> -->
+
+<form action="" method="POST">{% csrf_token %}
+{{form}}
+<button type="submit">ok</button>
+</form>
+{% endblock panel-content %}
