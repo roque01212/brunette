@@ -55,6 +55,7 @@ class UserRegisterForm(forms.ModelForm):
             ),
             'domicilio': forms.TextInput(
                 attrs={
+                    'required': 'required',
                     'type':'text',
                     'placeholder': 'Domicilio ...',
                     'class': 'form-control',
@@ -62,13 +63,22 @@ class UserRegisterForm(forms.ModelForm):
             ),
             'ocupation': forms.Select(
                 attrs={
+                    'required': 'required',
                     'placeholder': 'Ocupacion ...',
+                    'class': 'form-control',
+                }
+            ),
+            'genero': forms.Select(
+                attrs={
+                    'required': 'required',
+                    'placeholder': 'Genero ...',
                     'class': 'form-control',
                 }
             ),
             'date_birth': forms.DateInput(
                 format='%Y-%m-%d',
                 attrs={
+                    'required': 'required',
                     'type': 'date',
                     'class': 'form-control',
                 },

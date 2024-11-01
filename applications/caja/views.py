@@ -6,11 +6,12 @@ from django.shortcuts import get_object_or_404
 from.forms import CajaForm, CajaUpdateForm
 from .models import Caja, Mesas
 from applications.cocina.models import Pedidos, DetallePedido, Productos
+from applications.users.mixins import CajaPermisoMixin
 from .forms import PedidoForm, DetallePedidoForm
 # Create your views here.
 
 
-class AperturaCaja(FormView):
+class AperturaCaja(CajaPermisoMixin, FormView):
 
     form_class = CajaForm
     success_url = reverse_lazy('home_app:Index')
@@ -25,7 +26,7 @@ class AperturaCaja(FormView):
     
 
     
-class CierreCaja(FormView):
+class CierreCaja(CajaPermisoMixin, FormView):
     form_class = CajaUpdateForm
     success_url = reverse_lazy('home_app:Index')
     template_name= 'caja/cierre_caja.html'
@@ -40,7 +41,7 @@ class CierreCaja(FormView):
 
 
 
-class CrearPedidoView(FormView):
+class CrearPedidoView(CajaPermisoMixin, FormView):
     template_name = 'caja/generar_pedido.html'
     form_class = PedidoForm
     success_url = reverse_lazy('home_app:Index')  # Redirige a la vista de éxito después de crear el pedido

@@ -20,11 +20,11 @@ urlpatterns = [
         views.LogoutView.as_view(),
         name='User-Logout',
     ),
-    path(
-        'users/update-password/<pk>/', 
-        views.UpdatePasswordView.as_view(),
-        name='User-Update_Password',
-    ),
+    # path(
+    #     'users/update-password/<pk>/', 
+    #     views.UpdatePasswordView.as_view(),
+    #     name='User-Update_Password',
+    # ),
     path(
         'users/update/<pk>/', 
         views.UserUpdateView.as_view(),
