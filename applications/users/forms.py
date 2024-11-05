@@ -59,6 +59,8 @@ class UserRegisterForm(forms.ModelForm):
                     'type':'text',
                     'placeholder': 'Domicilio ...',
                     'class': 'form-control',
+                    'autocomplete':"off",
+                    'name': 'domicilio_custom',
                 }
             ),
             'ocupation': forms.Select(
@@ -107,7 +109,7 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(
             attrs={
                 'class': 'form-control',
-                'placeholder': 'contraseña rey'
+                'placeholder': 'contraseña'
             }
         )
     )

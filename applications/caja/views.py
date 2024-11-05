@@ -1,13 +1,18 @@
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 from django.forms import formset_factory
+from django.views import View
 from django.views.generic.edit import FormView
+from django.views.generic import DeleteView, UpdateView, ListView
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from.forms import CajaForm, CajaUpdateForm
 from .models import Caja, Mesas
 from applications.cocina.models import Pedidos, DetallePedido, Productos
 from applications.users.mixins import CajaPermisoMixin
-from .forms import PedidoForm, DetallePedidoForm
+from .forms import PedidoForm, DetallePedidoForm, DetallePedidoUpdateForm
 # Create your views here.
 
 
@@ -40,63 +45,113 @@ class CierreCaja(CajaPermisoMixin, FormView):
         return super().form_valid(form)
 
 
-
 class CrearPedidoView(CajaPermisoMixin, FormView):
     template_name = 'caja/generar_pedido.html'
     form_class = PedidoForm
-    success_url = reverse_lazy('home_app:Index')  # Redirige a la vista de éxito después de crear el pedido
+    success_url = reverse_lazy('caja_app:Crear_Pedido')
 
-    
+    def get_initial(self):
+        # Inicializar valores de mesa y tipo de pago para mantenerlos al redirigir
+        initial = super().get_initial()
+        mesa_id = self.request.session.get('mesa')
+        if mesa_id:
+            initial['mesa'] = get_object_or_404(Mesas, id=mesa_id)  # Obtener la instancia de Mesa
+        initial['tipo_pago_pedido'] = self.request.session.get('tipo_pago_pedido')
+        initial['pagado_pedido'] = self.request.session.get('pagado_pedido')
+        return initial
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['formPedido'] = DetallePedidoForm
+        context['formPedido'] = DetallePedidoForm()
+        context['lista_pedidos'] = DetallePedido.objects.filter(
+            pedido__mesa__id = self.request.session.get('mesa')
+        )
+        context['form_update'] = DetallePedidoUpdateForm()
+       
         return context
-    
+
     def form_valid(self, form):
-            caja = get_object_or_404(Caja, abierta_caja=True)  # Caja abierta
-            mesa = form.cleaned_data['mesa']
-            tipo_pago = form.cleaned_data['tipo_pago_pedido']
-            pagado = form.cleaned_data['pagado_pedido']
-            pedido = Pedidos.objects.crear_pedidos(caja, mesa, tipo_pago, pagado)
+        # Obtener y guardar los datos del pedido principal
+        caja = get_object_or_404(Caja, abierta_caja=True)
+        mesa = form.cleaned_data['mesa']
+        tipo_pago = form.cleaned_data['tipo_pago_pedido']
+        pagado = form.cleaned_data['pagado_pedido']
+        pedido = Pedidos.objects.crear_pedidos(caja, mesa, tipo_pago, pagado)
 
-            producto = self.request.POST.get('producto')
-            producto_id =get_object_or_404(Productos, id=producto)
-            total_pedido = self.request.POST.get('total_pedido')
-            DetallePedido.objects.crear_detalleP(pedido, producto_id, total_pedido)
+        # Guardar los datos de la mesa y el tipo de pago en la sesión
+        self.request.session['mesa'] = mesa.id  # Almacenar solo el ID
+        self.request.session['tipo_pago_pedido'] = tipo_pago
+        self.request.session['pagado_pedido'] = pagado
 
+        # Guardar el detalle del pedido
+        producto = self.request.POST.get('producto')
+        producto_id = get_object_or_404(Productos, id=producto)
+        total_pedido = self.request.POST.get('total_pedido')
+        
+        
+        DetallePedido.objects.crear_detalleP(pedido, producto_id, total_pedido)
 
-            return super().form_valid(form)
-
-
-    # # Formset para manejar múltiples productos en un solo pedido
-    # detalle_pedido_formset = formset_factory(DetallePedidoForm, extra=1, can_delete=False)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['formset'] = self.detalle_pedido_formset()
-    #     return context
-
-    # def form_valid(self, form):
-    #     formset = self.detalle_pedido_formset(self.request.POST)
-    #     print(formset)
-    #     if formset.is_valid():
-    #         # Crear el pedido principal
-    #         caja = get_object_or_404(Caja, abierta_caja=True)  # Caja abierta
-    #         mesa = form.cleaned_data['mesa']
-    #         tipo_pago = form.cleaned_data['tipo_pago_pedido']
-    #         pagado = form.cleaned_data['pagado_pedido']
-    #         pedido = Pedidos.objects.crear_pedidos(caja, mesa, tipo_pago, pagado)
-            
-    #         # Guardar cada detalle del pedido
-    #         for detalle_form in formset:
-    #             print(detalle_form.cleaned_data.get('producto'))
-    #             producto = detalle_form.cleaned_data.get('producto')
-    #             total_pedido = detalle_form.cleaned_data.get('total_pedido')
-    #             if producto and total_pedido:
-    #                 DetallePedido.objects.crear_detalleP(pedido,producto, total_pedido)
-    #         # Mesas.objects.update_mesa(mesa)
+        return redirect(self.success_url)  # Redirige a la misma página
 
 
-    #         return super().form_valid(form)
-    #     else:
-    #         return self.form_invalid(form)
+
+class TerminarPedidoView(CajaPermisoMixin, View):
+
+    
+
+    def post(self, request, *args, **kwargs):
+        id_mesa = request.session.get('mesa')
+       
+        if id_mesa:
+            Mesas.objects.update_mesa(id_mesa)
+
+        # Eliminar los datos de la sesión
+        request.session.pop('mesa', None)
+        request.session.pop('tipo_pago_pedido', None)
+        request.session.pop('pagado_pedido', None)
+
+        # Redirigir a la página de inicio
+        return redirect(reverse_lazy('home_app:Index'))
+
+
+class DetallePedidoDeleteView(CajaPermisoMixin, DeleteView):
+    model = DetallePedido
+    success_url = reverse_lazy('caja_app:Crear_Pedido')
+      
+
+class DetallePedidoUpdateView(CajaPermisoMixin,UpdateView):
+    model = DetallePedido
+    form_class = DetallePedidoUpdateForm
+    template_name = 'caja/update.html'  # Asegúrate de que el template existe y tiene el formulario correcto
+    success_url = reverse_lazy('caja_app:Crear_Pedido')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Verificar si la solicitud es AJAX usando el encabezado
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({"success": True}, status=200)
+        return response
+
+    def get(self, request, *args, **kwargs):
+        # Usa get_object_or_404 para evitar un error si el objeto no existe
+        self.object = get_object_or_404(DetallePedido, pk=kwargs['pk'])
+        context = self.get_context_data()
+
+        # Verificar si la solicitud es AJAX usando el encabezado
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            html = render_to_string(self.template_name, context, request=request)
+            return JsonResponse({"html": html}, status=200)
+
+        # Si no es una solicitud AJAX, procesa normalmente
+        return super().get(request, *args, **kwargs)
+    
+
+
+
+class MesasListView(ListView):
+    model = Mesas
+    template_name = 'caja/lista_mesas.html'
+    context_object_name = 'mesas'
+
+
+    

@@ -3,36 +3,128 @@
 
 
 {% block panel-content %}
+<div class="container">
+  <div class="row">
 
-<h2>Crear Pedido</h2>
-<form method="post">
-    {% csrf_token %}
-    
-    <!-- Formulario del pedido -->
-    {{ form.as_p }}
+    <h2>Crear Pedido</h2>
 
-    <!-- Formset para los productos -->
-    <h3>Agregar Productos</h3>
-    <!-- {{ formset.management_form }} -->
-    <!-- {% for form in formset %} -->
-    <!-- {% endfor %} -->
-    <div id="productos">
-            <div class="producto">
-                {{ formPedido.producto.label_tag }} {{ formPedido.producto }}
-                {{ formPedido.total_pedido.label_tag }} {{ formPedido.total_pedido }}
-            </div>
+    <form method="post">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col">
+          {{form.mesa.label_tag}} {{form.mesa}}
+        </div>
+        <div class="col">
+          {{form.tipo_pago_pedido.label_tag}} {{form.tipo_pago_pedido}}
+        </div>
+
+
+      </div>
+      <div class="form-check form-switch">
+        {{form.pagado_pedido.label_tag}} {{form.pagado_pedido}}
+
+      </div>
+
+      <!-- Formulario del pedido -->
+      <h3>Agregar Productos</h3>
+
+      <div id="productos ">
+        <div class="producto row">
+          <div class="col">
+            {{ formPedido.producto.label_tag }} {{ formPedido.producto }}
+          </div>
+          <div class="col">
+            {{ formPedido.total_pedido.label_tag }} {{ formPedido.total_pedido }}
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary mt-5">Agregar</button>
+    </form>
+    <form action="{% url 'caja_app:TerminarPedido' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Terminar</button>
+    </form>
+
+
+  </div>
+  {{lista_detalle}}
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">N°</th>
+        <th scope="col">Producto</th>
+        <th scope="col">Cantidad</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in lista_pedidos %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{i.producto.nombre_prod }}</td>
+        <td>{{ i.total_pedido }}</td>
+        <form action="{% url 'caja_app:Eliminar_Pedido' i.id %}" method="POST">{% csrf_token %}
+          <td>
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+        <!-- Botón para cargar el formulario de edición en el modal -->
+        <button type="button" onclick="loadEditForm('{{ i.id }}')" class="btn btn-primary" data-bs-toggle="modal" 
+        data-bs-target="#staticBackdrop #editModal">
+        Editar
+        </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Editar Pedido</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="editModalBody">
+          <!-- Aquí se cargará el formulario mediante AJAX -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
+</div>
+  
 
-    <!-- Botones para agregar o eliminar productos -->
-    <button type="button" id="add-product">Agregar Producto</button>
-    <button type="submit" class="btn btn-primary">Crear Pedido</button>
-</form>
+</div>
 
 <script>
-    // Script para agregar un producto dinámicamente al pedido
-    document.getElementById('add-product').addEventListener('click', function() {
-        let newForm = document.querySelector('.producto').cloneNode(true);
-        document.getElementById('productos').appendChild(newForm);
-    });
+  function loadEditForm(detalleId) {
+    // Enviar solicitud AJAX para obtener el formulario de edición
+    fetch(`/caja/actualizar-pedido/${detalleId}/`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Inserta el HTML del formulario en el cuerpo del modal
+        document.getElementById('editModalBody').innerHTML = data.html;
+        // Abre el modal usando Bootstrap 5
+        const editModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+        editModal.show();
+      })
+      .catch(error => console.log('Error en la solicitud AJAX:', error));
+  }
 </script>
+
 {% endblock panel-content %}

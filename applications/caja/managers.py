@@ -29,4 +29,4 @@ class CajaManager(models.Manager):
 class MesasManager(models.Manager):
 
     def update_mesa(self, mesa):
-        return self.filter(id = mesa.id).update(mesa_dispnible=False)
+        return self.filter(id = mesa).update(mesa_dispnible=False)
