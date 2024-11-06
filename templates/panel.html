@@ -21,13 +21,13 @@
             <a href="#">Reportes</a>
             <div class="mt-3">
                 <h5>Caja</h5>
-
-                
                 {% if not caja_activa %}
                 <a href="{% url 'caja_app:Nueva_Caja' %}">Apertura de Caja</a>
                 {% else %}
                 <a href="{% url 'caja_app:Cierre-caja' %}">Cerrar Caja</a>
                 <a href="{% url 'caja_app:Crear_Pedido' %}">Gererar pedido</a>
+                <a href="#">Agregar pedido</a>
+                
                 {% endif %}
 
             </div>
