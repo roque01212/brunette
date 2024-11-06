@@ -3,6 +3,7 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from .mixins import AdminPermisoMixin
 
 from django.views.generic import (
     View,
@@ -74,41 +75,45 @@ class LogoutView(View):
 
 
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "users/update.html"
     model = User
     form_class = UserUpdateForm
     success_url = reverse_lazy('users_app:User-Lista')
-
-
-class UserDeleteView(DeleteView):
-    model = User
-    success_url = reverse_lazy('users_app:User-Lista')
-
-
-class UpdatePasswordView(LoginRequiredMixin, FormView):
-    # template_name = 'users/update.html'
-    form_class = UpdatePasswordForm
-    success_url = reverse_lazy('users_app:User-Login')
     login_url = reverse_lazy('users_app:User-Login')
 
-    def form_valid(self, form):
-        usuario = self.request.user
-        user = authenticate(
-            email=usuario.email,
-            password=form.cleaned_data['password1']
-        )
-
-        if user:
-            new_password = form.cleaned_data['password2']
-            usuario.set_password(new_password)
-            usuario.save()
-
-        logout(self.request)
-        return super(UpdatePasswordView, self).form_valid(form)
 
 
-class UserListView(LoginRequiredMixin, ListView):
+class UserDeleteView(LoginRequiredMixin,DeleteView):
+    model = User
+    success_url = reverse_lazy('users_app:User-Lista')
+    login_url = reverse_lazy('users_app:User-Login')
+
+
+
+# class UpdatePasswordView(LoginRequiredMixin, FormView):
+#     # template_name = 'users/update.html'
+#     form_class = UpdatePasswordForm
+#     success_url = reverse_lazy('users_app:User-Login')
+#     login_url = reverse_lazy('users_app:User-Login')
+
+#     def form_valid(self, form):
+#         usuario = self.request.user
+#         user = authenticate(
+#             email=usuario.email,
+#             password=form.cleaned_data['password1']
+#         )
+
+#         if user:
+#             new_password = form.cleaned_data['password2']
+#             usuario.set_password(new_password)
+#             usuario.save()
+
+#         logout(self.request)
+#         return super(UpdatePasswordView, self).form_valid(form)
+
+
+class UserListView(AdminPermisoMixin, ListView):
     template_name = "users/lista.html"
     context_object_name = 'usuarios'
     login_url = reverse_lazy('users_app:User-Login')

@@ -39,12 +39,18 @@ class Pedidos(models.Model):
 
 
 class Productos(models.Model):
+    BEBIDA = '0'
+    COCINA = '1'
+    TIPO_CATEGORIA_CHOICES = [
+        (BEBIDA, 'Bebida'),
+        (COCINA, 'Cocina'),
+    ]
     nombre_prod = models.CharField(max_length=100)
     precio_prod = models.DecimalField(max_digits=10, decimal_places=2)
     stock_min_prod = models.PositiveIntegerField()  # Stock mínimo para alerta
     stock_actual_prod = models.PositiveIntegerField()  # Cantidad actual en stock
     existencia_insumo = models.BooleanField(default=True)  # Indica si el insumo está disponible
-
+    categoria = models.CharField('Categoria', max_length=2, choices=TIPO_CATEGORIA_CHOICES)
 
     def __str__(self):
         return self.nombre_prod

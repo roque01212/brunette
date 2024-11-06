@@ -55,20 +55,32 @@ class UserRegisterForm(forms.ModelForm):
             ),
             'domicilio': forms.TextInput(
                 attrs={
+                    'required': 'required',
                     'type':'text',
                     'placeholder': 'Domicilio ...',
                     'class': 'form-control',
+                    'autocomplete':"off",
+                    'name': 'domicilio_custom',
                 }
             ),
             'ocupation': forms.Select(
                 attrs={
+                    'required': 'required',
                     'placeholder': 'Ocupacion ...',
+                    'class': 'form-control',
+                }
+            ),
+            'genero': forms.Select(
+                attrs={
+                    'required': 'required',
+                    'placeholder': 'Genero ...',
                     'class': 'form-control',
                 }
             ),
             'date_birth': forms.DateInput(
                 format='%Y-%m-%d',
                 attrs={
+                    'required': 'required',
                     'type': 'date',
                     'class': 'form-control',
                 },
@@ -97,7 +109,7 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(
             attrs={
                 'class': 'form-control',
-                'placeholder': 'contraseña rey'
+                'placeholder': 'contraseña'
             }
         )
     )

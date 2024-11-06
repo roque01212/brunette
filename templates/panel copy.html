@@ -12,36 +12,36 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar ">
-            <h1>Brunnete</h1>
+            <h1>Brunette</h1>
             
-        {% if user.is_active %}
+            {% if user.get_ocupation_display == 'Cocinero' or user.get_ocupation_display == 'Administrador' %}
             <h5>Cocina</h5>
             <a href="#">Productos</a>
             <a href="#">Reportes</a>
+            {% endif %}
+
             <div class="mt-3">
-
+            {% if user.get_ocupation_display == 'Cajero' or user.get_ocupation_display == 'Administrador' %}
                 <h5>Caja</h5> 
-
                 {% if not caja_activa %}
                 <a href="{% url 'caja_app:Nueva_Caja' %}">Apertura de Caja</a>
-                {% elif caja_activa_usuario == user.full_name %}
+                {% elif caja_activa_usuario == user.full_name or user.get_ocupation_display == 'Administrador' %}
                 <a href="{% url 'caja_app:Cierre-caja' %}">Cerrar Caja</a>
                 <a href="{% url 'caja_app:Crear_Pedido' %}">Gererar pedido</a>
                 <a href="#">Agregar pedido</a>
-
-                <a href="{% url 'caja_app:Lista_mesas' %}">Mesas</a>
-
+                <a href="#">Mesas</a>
                 {% endif %}
-
+            {% endif %}
             </div>
+            {% if user.get_ocupation_display == 'Administrador' %}
             <div class="mt-3">
                 <h5>Administración</h5>
                 <a href="#">Administracion</a>
                 <a href="{% url 'users_app:User-Lista' %}">Usuarios</a>
                 <a href="#">Reportes</a>
             </div>
+            {% endif %}
         
-        {% endif %}
     </div>
         <!-- Contenido principal -->
         <div class=" flex-grow-1 ">

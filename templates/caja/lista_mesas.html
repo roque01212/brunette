@@ -1,0 +1,42 @@
+{% extends 'panel.html' %}
+
+
+
+{% block panel-content %}
+ 
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">N°</th>
+        <th scope="col">Numer de mesa</th>
+        <th scope="col">Disponibilidad</th>
+        <th scope="col">Accion</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for i in mesas %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{i.num_mesa}}</td>
+        
+        {% if i.mesa_dispnible %}
+        <td> Disponible</td>
+        {% else %}
+
+        <td>Ocupada</td> 
+        <td>habilitar</td>
+
+        {% endif %}
+                  </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    
+
+        
+       
+
+        
+    
+{% endblock panel-content %}
+    
