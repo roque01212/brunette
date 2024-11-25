@@ -16,8 +16,11 @@
             
         {% if user.is_active %}
             <h5>Cocina</h5>
-            <a href="#">Productos</a>
-            <a href="#">Reportes</a>
+            {% if not caja_activa %}
+            <a href="#">Debes abrir de Caja</a>
+            {% else %}
+            <a href="{% url 'cocina_app:Mesas' %}">Pedidos</a>
+            {% endif %}
             <div class="mt-3">
                 <h5>Caja</h5> 
                 {% if not caja_activa %}
@@ -25,7 +28,7 @@
                 {% elif caja_activa_usuario == user.full_name %}
                 <a href="{% url 'caja_app:Cierre-caja' %}">Cerrar Caja</a>
                 <a href="{% url 'caja_app:Crear_Pedido' %}">Gererar pedido</a>
-                <a href="#">Agregar pedido</a>
+                <a href="{% url 'caja_app:Lista_Pedidos' %}">Lista Pedidos</a>
                 <a href="{% url 'caja_app:Lista_mesas' %}">Mesas</a>
                 {% endif %}
             </div>

@@ -47,6 +47,11 @@
         <span class="input-group-label"><i class="fi-calendar"></i></span>
         {{ form.date_birth }}
       </div>
+      {% for error in form.date_birth.errors %}
+        <p class="cell" style="color: red;">
+          {{ error|escape }}
+        </p>
+      {% endfor %}
     </div>
 
     <div class="cell medium-6">

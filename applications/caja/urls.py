@@ -23,16 +23,36 @@ urlpatterns = [
             views.DetallePedidoDeleteView.as_view(), 
             name='Eliminar_Pedido'
         ),
-    path('caja/terminar-pedido/', 
-         views.TerminarPedidoView.as_view(), 
-         name='TerminarPedido'
-    ),
-    path('caja/actualizar-pedido/<pk>/', 
+    path('caja/actualizar-detalle-pedido/<pk>/', 
          views.DetallePedidoUpdateView.as_view(), 
-         name='Actualizar_Pedido'),
+         name='Actualizar_Pedido'
+     ),
 
     path('caja/lista-mesas/', 
          views.MesasListView.as_view(), 
-         name='Lista_mesas'),
+         name='Lista_mesas'
+    ),
+    path('caja/update-mesas/<pk>/', 
+         views.MesasUpdateView.as_view(), 
+         name='Update_Mesa'
+    ),
+    path('filtrar-productos/', 
+         views.filtrar_productos, 
+        name='filtrar_productos'
+    ),
+    path('lista-pedidos/', 
+         views.PedidosListView.as_view(), 
+        name='Lista_Pedidos'
+    ),
+    path('marcar-pedido-listo/<pk>/',
+        views.MarcarPedidoListoView.as_view(),
+        name='Marcar_Pedido_Listo'
+    ),
+    path('cobrar-pedidos/<pk>/',
+        views.CobrarPedidosView.as_view(),
+        name='Cobrar_Pedidos'
+        ),
+
+
     
 ]

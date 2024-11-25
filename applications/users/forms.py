@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate
+from datetime import date
 #
 from .models import User
 
@@ -92,6 +93,16 @@ class UserRegisterForm(forms.ModelForm):
             self.add_error('password2', 'Las contraseñas no son iguales')
 
 
+    def clean_date_birth(self):
+        date_birth = self.cleaned_data.get("date_birth")
+        if date_birth:
+            today = date.today()
+            age = today.year - date_birth.year - ((today.month, today.day) < (date_birth.month, date_birth.day))
+            if age < 18:
+                raise forms.ValidationError("Debes tener al menos 18 años para registrarte.")
+        return date_birth
+
+
 class LoginForm(forms.Form):
     email = forms.CharField(
         label='E-mail',
@@ -123,6 +134,7 @@ class LoginForm(forms.Form):
             raise forms.ValidationError('Los datos de usuario no son correctos')
         
         return self.cleaned_data
+    
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -170,6 +182,16 @@ class UserUpdateForm(forms.ModelForm):
                 },
             ),
         }
+
+    def clean_date_birth(self):
+        date_birth = self.cleaned_data.get("date_birth")
+        if date_birth:
+            today = date.today()
+            age = today.year - date_birth.year - ((today.month, today.day) < (date_birth.month, date_birth.day))
+            if age < 18:
+                raise forms.ValidationError("Debes tener al menos 18 años para registrarte.")
+        return date_birth
+
 
 
 class UpdatePasswordForm(forms.Form):

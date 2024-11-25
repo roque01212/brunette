@@ -1,0 +1,61 @@
+{% extends "panel.html" %}
+
+{% load  static %}
+
+
+{% block panel-content %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">N° de mesa</th>
+      <th scope="col">Nombre Pedido</th>
+      <th scope="col">Cantidad</th>
+      <th scope="col" colspan="3">Accion</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in lista_pedidos %}
+    <tr>
+      <td>{{i.pedido.mesa.num_mesa}} </td>
+      <td>{{i.producto.nombre_prod}} </td>
+      <td>{{i.total_pedido}} </td>
+     
+      <td>
+        <form action="{% url 'cocina_app:Pedido_Listo_Cocina' i.pedido.id %}" method="POST">{% csrf_token %}
+          {% if not no_puede %}
+          <button class="btn btn-success"  type="submit">
+          Listo</button>
+          {% else %}
+          <button class="btn btn-success" disabled type="submit">
+            Listo</button>
+          {% endif %}
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">Previous</a></li>
+    {% endif %}
+
+    {% for page in paginator.page_range %}
+    {% if page == page_obj.number %}
+    <li class="page-item active"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+    {% else %}
+    <li class="page-item "><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% endblock panel-content %}
+    

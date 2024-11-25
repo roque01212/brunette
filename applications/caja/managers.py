@@ -30,3 +30,7 @@ class MesasManager(models.Manager):
 
     def update_mesa(self, mesa):
         return self.filter(id = mesa).update(mesa_dispnible=False)
+    
+    def activar_mesa(self, mesa):
+        return self.filter(id = mesa).update(mesa_disponible=True)
+

@@ -4,56 +4,41 @@
 
 {% block panel-content %}
 <div class="container">
-  <div class="row">
+  <form class="row g-3" method="POST">{% csrf_token %}
+    <h4>Crear Pedido</h4>
+    <div class="col-md-6">
+      {{form.mesa.label_tag}} {{form.mesa}}
 
-    <h2>Crear Pedido</h2>
+    </div>
+    <div class="col-md-6">
+      {{form.tipo_pago_pedido.label_tag}} {{form.tipo_pago_pedido}}
+    </div>
 
-    <form method="post">
-      {% csrf_token %}
-      <div class="row">
-        <div class="col">
-          {{form.mesa.label_tag}} {{form.mesa}}
+    
+        <div class="col-md-2">
+          <label for="producto-buscar" class="form-label">Buscar Producto</label>
+          <input type="text" id="producto-buscar" class="form-control" placeholder="Escribe para buscar...">
         </div>
-        <div class="col">
-          {{form.tipo_pago_pedido.label_tag}} {{form.tipo_pago_pedido}}
+        <div class="col-md-2 mt-5">
+          <button type="button" id="buscar-producto-btn" class="btn btn-secondary">Buscar</button>
         </div>
+    <div class="col-md-6">
+      {{ formPedido.producto.label_tag }} {{ formPedido.producto }}
+    </div>
+    <div class="col-md-2">
+      {{ formPedido.total_pedido.label_tag }} {{ formPedido.total_pedido }}
+    </div>
+    <div class="col text-center">
+      <button type="submit" class="btn btn-success mt-3">Agregar</button>
+    </div>
 
+  </form>
 
-      </div>
-      <div class="form-check form-switch">
-        {{form.pagado_pedido.label_tag}} {{form.pagado_pedido}}
-
-      </div>
-
-      <!-- Formulario del pedido -->
-      <h3>Agregar Productos</h3>
-
-      <div id="productos ">
-        <div class="producto row">
-          <div class="col">
-            {{ formPedido.producto.label_tag }} {{ formPedido.producto }}
-          </div>
-          <div class="col">
-            {{ formPedido.total_pedido.label_tag }} {{ formPedido.total_pedido }}
-          </div>
-        </div>
-      </div>
-      <div class="text-center">
-        <button type="submit" class="btn btn-primary mt-5">Agregar</button>
-    </form>
-    <form action="{% url 'caja_app:TerminarPedido' %}" method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Terminar</button>
-    </form>
-
-
-  </div>
-  {{lista_detalle}}
 
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">N°</th>
+        <th scope="col">N° de Mesa</th>
         <th scope="col">Producto</th>
         <th scope="col">Cantidad</th>
         <th scope="col">Acciones</th>
@@ -62,27 +47,35 @@
     <tbody>
       {% for i in lista_pedidos %}
       <tr>
-        <th scope="row">{{ forloop.counter }}</th>
+        <th scope="row">{{ i.pedido.mesa.num_mesa }}</th>
         <td>{{i.producto.nombre_prod }}</td>
         <td>{{ i.total_pedido }}</td>
-        <form action="{% url 'caja_app:Eliminar_Pedido' i.id %}" method="POST">{% csrf_token %}
+        <form action="{% url 'caja_app:Eliminar_Pedido' i.pedido.id %}" method="POST">{% csrf_token %}
           <td>
             <button type="submit" class="btn btn-danger">Eliminar</button>
+          <td>
         </form>
         <!-- Botón para cargar el formulario de edición en el modal -->
-        <button type="button" onclick="loadEditForm('{{ i.id }}')" class="btn btn-primary" data-bs-toggle="modal" 
-        data-bs-target="#staticBackdrop #editModal">
-        Editar
+        <button type="button" onclick="loadEditForm('{{ i.id }}')" class="btn btn-primary" data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop #editModal">
+          Editar
         </button>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+</div>
+
+
+
+
+
 
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -90,7 +83,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="editModalBody">
-          <!-- Aquí se cargará el formulario mediante AJAX -->
+        <!-- Aquí se cargará el formulario mediante AJAX -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -98,14 +91,12 @@
     </div>
   </div>
 </div>
-  
 
-</div>
 
 <script>
   function loadEditForm(detalleId) {
     // Enviar solicitud AJAX para obtener el formulario de edición
-    fetch(`/caja/actualizar-pedido/${detalleId}/`, {
+    fetch(`/caja/actualizar-detalle-pedido/${detalleId}/`, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest'
       }
@@ -125,6 +116,35 @@
       })
       .catch(error => console.log('Error en la solicitud AJAX:', error));
   }
+
+
+  document.getElementById('buscar-producto-btn').addEventListener('click', function (e) {
+    e.preventDefault();  // Evita que el formulario se envíe
+
+    const query = document.getElementById('producto-buscar').value; // Capturar término de búsqueda
+    fetch(`/filtrar-productos/?kword=${encodeURIComponent(query)}`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'  // Indica que es una solicitud AJAX
+      }
+    })
+      .then(response => {
+        if (!response.ok) throw new Error('Error en la solicitud');
+        return response.json();
+      })
+      .then(data => {
+        const select = document.getElementById('id_producto'); // El select que se actualizará
+        select.innerHTML = '';  // Limpia las opciones actuales
+        data.productos.forEach(producto => {
+          const option = document.createElement('option');
+          option.value = producto.id;
+          option.textContent = producto.nombre;
+          select.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Error:', error));
+  });
+
+
 </script>
 
 {% endblock panel-content %}
