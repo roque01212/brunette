@@ -2,24 +2,31 @@
 
 
 {% block panel-content %}
+
+<div class="container">
     
-<!-- <div class="container ">
-    
-    <form action="" class="row" method="POST">{% csrf_token %}
+    {% if mensaje_alerta %}
+      <script type="text/javascript">
+        alert("{{ mensaje_alerta }}");
+      </script>
+    {% endif %}
+    <form action="" class="row" method="POST">
+        {% csrf_token %}
         <div class="col-6">
-        <label class="form-label">Total Ingresos:</label>
-        {{form.total_ingresos}}
+            <label class="form-label">Total Ingresos:</label>
+            {{ form.total_ingresos }}
         </div>
         <div class="col-6">
             <label class="form-label">Total Egresos:</label>
-            {{form.total_ingresos}}
+            {{ form.total_egresos }}
+        </div>
+        <div class="col-12 mt-3">
+            <!-- Botón para ver el reporte de ventas realizadas -->
+            <a href="{% url 'caja_app:Ventas_Realizadas' %}" class="btn btn-info">Generar PDF de Ventas Realizadas</a>
         </div>
         <button type="submit" class="btn btn-success mt-5 col-2">Cerrar caja</button>
     </form>
-</div> -->
+</div>
 
-<form action="" method="POST">{% csrf_token %}
-{{form}}
-<button type="submit">ok</button>
-</form>
-{% endblock panel-content %}
+
+{% endblock panel-content %} 

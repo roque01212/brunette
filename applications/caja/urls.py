@@ -15,6 +15,10 @@ urlpatterns = [
         views.CierreCaja.as_view(),
         name='Cierre-caja',
     ),
+    path('caja/ventas-realizadas/', 
+        views.ventas_realizadas,
+        name='Ventas_Realizadas'
+    ),
     path('caja/crear-pedido/', 
          views.CrearPedidoView.as_view(), 
          name='Crear_Pedido'
@@ -40,19 +44,38 @@ urlpatterns = [
          views.filtrar_productos, 
         name='filtrar_productos'
     ),
-    path('lista-pedidos/', 
+    path('caja/lista-pedidos/', 
          views.PedidosListView.as_view(), 
         name='Lista_Pedidos'
     ),
-    path('marcar-pedido-listo/<pk>/',
+    path('caja/marcar-pedido-listo/<pk>/',
         views.MarcarPedidoListoView.as_view(),
         name='Marcar_Pedido_Listo'
     ),
-    path('cobrar-pedidos/<pk>/',
+    path('caja/cobrar-pedidos/<pk>/',
         views.CobrarPedidosView.as_view(),
         name='Cobrar_Pedidos'
-        ),
-
+    ),
+    path('caja(mesa/<pk>/generar-pdf/'
+        , views.GenerarPDFView.as_view(), 
+        name='Generar_PDF'
+    ),
+    path('caja/ranking-semanal/',
+        views.RankingTortaView.as_view(),
+        name='Ranking_Semanal'
+    ),
+    path('caja/ranking-torta-pdf/',
+        views.ranking_torta_pdf,
+        name='ranking_torta_pdf'
+    ),
+    path('caja/lista-ventas/',
+        views.ListaCajasView.as_view(),
+        name='Lista_Ventas'
+    ),
+    path('caja/detalle-cajas/<pk>/',
+        views.DetalleCajaView.as_view(),
+        name='Detalle_Cajas'
+    ),
 
     
 ]

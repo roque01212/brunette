@@ -3,35 +3,6 @@
 {% block panel-content %}
 
 
-<!--  
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Numer de mesa</th>
-        <th scope="col">Disponibilidad</th>
-        <th scope="col">Accion</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for i in mesas %}
-      <tr>
-        <td class="h4">{{i.num_mesa}}</td>
-        
-        {% if i.mesa_dispnible %}
-        <td class="h4"> Disponible</td>
-        {% else %}
-        <td class="h4"> Ocupada</td>
-        <form action="{% url 'caja_app:Update_Mesa' i.id %}" method="POST">{% csrf_token %}
-          <td>
-            <button class="btn btn-success" type="submit">Liberar</button>
-        </form>
-        </td>
-      </tr>
-      {% endif %}
-        
-      {% endfor %}
-    </tbody>
-</table> -->
 
 <div class="row">
   {% for i in mesas %}
@@ -43,13 +14,13 @@
             <p class="card-text">Mesa Ocupada</p>
             <form  id="liberarMesaForm{{i.id}}" action="{% url 'caja_app:Update_Mesa' i.id %}" method="POST">
               {% csrf_token %}
-                  <!-- <button id="liberarMesaBtn{{i.id}}" class="btn btn-success" type="button">Liberar</button> -->
                   <button class="btn btn-success liberar-mesa-btn" data-id="{{i.id}}" type="button">Liberar Mesa</button>
           </form>
           
           {% if i in cobrar %}
           <form  action="{% url 'caja_app:Cobrar_Pedidos' i.id %}" method="POST">
             {% csrf_token %}
+            <a href="{% url 'caja_app:Generar_PDF' i.id %}" class="btn btn-info" target="_blank">Generar PDF</a>
             <button  class="btn btn-success" type="submit">Pagar Pedidos</button>
           </form>
           {% endif %}
@@ -67,25 +38,6 @@
     </div>
   {% endfor %}
 </div>
-
- <!-- Modal para pedidos pendientes
-<div class="modal fade" id="modalCobrarPedidos" tabindex="-1" aria-labelledby="modalCobrarPedidosLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalCobrarPedidosLabel">Confirmar Cobro</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>¿Desea marcar como pagados todos los pedidos de esta mesa?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="confirmCobrarBtn">Cobrar</button>
-      </div>
-    </div>
-  </div>
-</div> -->
 
 <script>
 

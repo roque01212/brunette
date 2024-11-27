@@ -1,0 +1,26 @@
+{% extends "panel.html" %}
+
+{% load  static %}
+
+
+{% block panel-content %}
+<div class="container">
+    <h1>{{ titulo }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar Producto</button>
+    </form>
+    {% if messages %}
+        <div class="mt-3">
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+
+
+{% endblock panel-content %}
+    

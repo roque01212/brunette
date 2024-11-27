@@ -8,3 +8,5 @@ from applications.caja.models import Caja
 class Home(TemplateView):
     template_name = "home/index.html"
 
+
+

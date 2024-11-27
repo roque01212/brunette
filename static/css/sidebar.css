@@ -1,0 +1,73 @@
+/* Estilos de la barra lateral */
+.sidebar {
+    background-color: #343a40; /* Fondo oscuro */
+    color: white;
+    width: 250px; /* Tamaño fijo para mantener consistencia */
+    height: 100%; /* Altura dinámica */
+    padding: 15px;
+    position: fixed; /* Permite que siempre esté visible */
+    top: 0;
+    left: 0;
+    overflow-y: auto; /* Scroll si el contenido excede la pantalla */
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar h1, .sidebar h5 {
+    margin-bottom: 15px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 5px 0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #495057; /* Fondo más oscuro al pasar el mouse */
+}
+
+/* Botón para cerrar el sidebar */
+.btn-close-sidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.btn-close-sidebar i {
+    pointer-events: none;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        transform: translateX(-250px); /* Ocultar barra lateral en móviles */
+        z-index: 1030;
+    }
+
+    .sidebar.active {
+        transform: translateX(0); /* Mostrar barra lateral al activarse */
+    }
+}
+
+/* Ajustar el contenido principal */
+.content {
+    margin-left: 250px; /* Dejar espacio para la barra lateral */
+    padding: 20px;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .content {
+        margin-left: 0; /* Contenido ocupa toda la pantalla cuando la barra lateral está oculta */
+    }
+}
+

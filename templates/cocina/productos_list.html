@@ -1,0 +1,70 @@
+{% extends "panel.html" %}
+
+{% load  static %}
+
+
+{% block panel-content %}
+
+<div class="container">
+    <h1 class="text-center">Gestión de Productos</h1>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{% url 'cocina_app:Crear_Producto' %}" class="btn btn-success">Crear Nuevo Producto</a>
+        <div>
+            <span>Filtrar por categoría:</span>
+            <a href="?categoria=0" class="btn btn-outline-primary btn-sm">Bebida</a>
+            <a href="?categoria=1" class="btn btn-outline-secondary btn-sm">Cocina</a>
+            <a href="{% url 'cocina_app:Productos_List' %}" class="btn btn-outline-dark btn-sm">Todas</a>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Stock Actual</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ producto.nombre_prod }}</td>
+                <td>${{ producto.precio_prod }}</td>
+                <td>{{ producto.get_categoria_display }}</td>
+                <td>{{ producto.stock_actual_prod }}</td>
+                <td>
+                    <a href="{% url 'cocina_app:Editar_Producto' producto.id %}" class="btn btn-primary btn-sm">Editar</a>
+                    <a href="{% url 'cocina_app:Eliminar_Producto' producto.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        {% if is_paginated %}
+            <nav>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">{{ page_obj.number }}</a>
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock panel-content %}
+    

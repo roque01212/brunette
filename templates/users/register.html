@@ -4,96 +4,77 @@
 
 {% block panel-content %}
 
-<div class="grid-x grid-margin-x align-center">
-  <h3 class="cell" style="margin-bottom: 1em; text-align: center;">Datos Nuevo Usuario</h3>  
-  <form class="form" method="POST">{% csrf_token %}
+<div class="container">
+  <h3 class="text-center mb-4">Datos Nuevo Usuario</h3>  
+  <form method="POST" class="needs-validation" novalidate>
+      {% csrf_token %}
       
-    <div class="cell medium-12">
-      <label>Email:</label>
-      <div class="input-group">
-        <span class="input-group-label"><i class="fi-mail"></i></span>
-        {{ form.email }}
+      <!-- Email -->
+      <div class="mb-2">
+          <label for="id_email" class="form-label">Correo Electrónico:</label>
+          {{ form.email }}
+          {% for error in form.email.errors %}
+              <div class="text-danger">{{ error }}</div>
+          {% endfor %}
       </div>
-      {% for error in form.email.errors %}
-        <p class="cell" style="color: red;">
-          {{ error|escape }}
-        </p>
-      {% endfor %}
-    </div>
-    <div class="cell medium-6">
-      <label>Nombre:</label>
-      <div class="input-group">
-        <span class="input-group-label"><i class="fi-book"></i></span>
-        {{form.full_name}}
-      </div>
-    </div>
-    <div class="cell medium-6">
-      <label>Domicilio:</label>
-      <div class="input-group">
-        <span class="input-group-label"><i class="fi-book"></i></span>
-        {{form.domicilio}}
-      </div>
-    </div>
-    <div class="cell medium-6">
-      <label>Permisos:</label>
-      <div class="input-group">
-        {{form.ocupation}}
-      </div>
-    </div>
-    <div class="cell medium-6">
-      <label>Genero:</label>
-      <div class="input-group">
-        {{form.genero}}
-      </div>
-    </div>
 
-    <div class="cell medium-6">
-      <label>Fecha de Nacimiento:</label>
-      <div class="input-group">
-        <span class="input-group-label"><i class="fi-calendar"></i></span>
-        {{ form.date_birth }}
-      </div>
-      {% for error in form.date_birth.errors %}
-        <p class="cell" style="color: red;">
-          {{ error|escape }}
-        </p>
-      {% endfor %}
-    </div>
-    
-    <div class="cell medium-6">
-      <label>Contraseña:</label>
-      <div class="input-group">
-        <span class="input-group-label"><i class="fi-key"></i></span>
-        {{ form.password1 }}
-      </div>
-      {% for error in form.password1.errors %}
-        <p class="cell" style="color: red;">
-          {{ error|escape }}
-        </p>
-      {% endfor %}
-    </div>
-    <div class="cell medium-6">
-      <label>Repetir Contraseña:</label>
-      <div class="input-group">
-        <span class="input-group-label"><i class="fi-key"></i></span>
-        {{ form.password2 }}
-      </div>
-      {% for error in form.password2.errors %}
-        <p class="cell" style="color: red;">
-          {{ error|escape }}
-        </p>
-      {% endfor %}
-    </div>
+      <!-- Nombre -->
+      <div class="row">
+          <div class="col-md-6 mb-2">
+              <label for="id_full_name" class="form-label">Nombre:</label>
+              {{ form.full_name }}
+          </div>
 
-    <div class="cell medium-8">
-      <button type="submit" class="btn btn-primary" style="width: 200px;">Guardar</button>
-      
-      {% if not user.is_active %}
-      <a href="{% url 'users_app:User-Login' %}" class="btn btn-danger">Cancelar</a>
-      {% endif %}
-      {% if object %}
-      <a href="#" class="btn btn-success">Eliminar</a>
-      {% endif %}
+          <!-- Domicilio -->
+          <div class="col-md-6 mb-2">
+              <label for="id_domicilio" class="form-label">Domicilio:</label>
+              {{ form.domicilio }}
+          </div>
+      </div>
+
+      <!-- Permisos y Género -->
+      <div class="row">
+          <div class="col-md-6 mb-2">
+              <label for="id_ocupation" class="form-label">Permisos:</label>
+              {{ form.ocupation }}
+          </div>
+          <div class="col-md-6 mb-2">
+              <label for="id_genero" class="form-label">Género:</label>
+              {{ form.genero }}
+          </div>
+      </div>
+
+      <!-- Fecha de Nacimiento -->
+      <div class="mb-2">
+          <label for="id_date_birth" class="form-label">Fecha de Nacimiento:</label>
+          {{ form.date_birth }}
+          {% for error in form.date_birth.errors %}
+              <div class="text-danger">{{ error }}</div>
+          {% endfor %}
+      </div>
+
+      <!-- Contraseña -->
+      <div class="row">
+          <div class="col-md-6 mb-2">
+              <label for="id_password1" class="form-label">Contraseña:</label>
+              {{ form.password1 }}
+              {% for error in form.password1.errors %}
+                  <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+          </div>
+          <div class="col-md-6 mb-2">
+              <label for="id_password2" class="form-label">Repetir Contraseña:</label>
+              {{ form.password2 }}
+              {% for error in form.password2.errors %}
+                  <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+          </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary w-25">Guardar</button>
+        <a href="{% url 'users_app:User-Lista' %}" class="btn btn-secondary w-25 mt-2">Cancelar</a>
     </div>
   </form>
 </div>

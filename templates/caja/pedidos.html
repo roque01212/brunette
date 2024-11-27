@@ -33,7 +33,7 @@
       </td>
       {% endif %}
 
-      <form action="{% url 'caja_app:Eliminar_Pedido' i.pedido.id %}" method="POST">{% csrf_token %}
+      <form action="{% url 'caja_app:Eliminar_Pedido' i.pedido.id %}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este pedido?');">{% csrf_token %}
         <td>
           <button type="submit" class="btn btn-danger">Eliminar</button>
         </td>
