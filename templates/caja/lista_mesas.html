@@ -1,42 +1,136 @@
 {% extends 'panel.html' %}
 
-
-
 {% block panel-content %}
- 
+
+
+<!--  
 <table class="table">
     <thead>
       <tr>
-        <th scope="col">N°</th>
         <th scope="col">Numer de mesa</th>
         <th scope="col">Disponibilidad</th>
         <th scope="col">Accion</th>
       </tr>
     </thead>
     <tbody>
-        {% for i in mesas %}
+      {% for i in mesas %}
       <tr>
-        <th scope="row">{{ forloop.counter }}</th>
-        <td>{{i.num_mesa}}</td>
+        <td class="h4">{{i.num_mesa}}</td>
         
         {% if i.mesa_dispnible %}
-        <td> Disponible</td>
+        <td class="h4"> Disponible</td>
         {% else %}
+        <td class="h4"> Ocupada</td>
+        <form action="{% url 'caja_app:Update_Mesa' i.id %}" method="POST">{% csrf_token %}
+          <td>
+            <button class="btn btn-success" type="submit">Liberar</button>
+        </form>
+        </td>
+      </tr>
+      {% endif %}
 
-        <td>Ocupada</td> 
-        <td>habilitar</td>
-
-        {% endif %}
-                  </tr>
       {% endfor %}
     </tbody>
-  </table>
-    
+</table> -->
 
-        
-       
+<div class="row">
+  {% for i in mesas %}
+    <div class="col-4 mt-1">
+      {% if not i.mesa_dispnible %}
+        <div class="card bg-primary text-white" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Mesa N° {{i.num_mesa}}</h5>
+            <p class="card-text">Mesa Ocupada</p>
+            <form  id="liberarMesaForm{{i.id}}" action="{% url 'caja_app:Update_Mesa' i.id %}" method="POST">
+              {% csrf_token %}
+                  <!-- <button id="liberarMesaBtn{{i.id}}" class="btn btn-success" type="button">Liberar</button> -->
+                  <button class="btn btn-success liberar-mesa-btn" data-id="{{i.id}}" type="button">Liberar Mesa</button>
+          </form>
+          
+          {% if i in cobrar %}
+          <form  action="{% url 'caja_app:Cobrar_Pedidos' i.id %}" method="POST">
+            {% csrf_token %}
+            <button  class="btn btn-success" type="submit">Pagar Pedidos</button>
+          </form>
+          {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <div class="card bg-secondary text-white" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Mesa N° {{i.num_mesa}}</h5>
+            <p class="card-text">Mesa está libre </p>
+            <a href="#" class="btn btn-dark disabled">Sin Pedidos</a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
 
-        
+ <!-- Modal para pedidos pendientes
+<div class="modal fade" id="modalCobrarPedidos" tabindex="-1" aria-labelledby="modalCobrarPedidosLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCobrarPedidosLabel">Confirmar Cobro</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Desea marcar como pagados todos los pedidos de esta mesa?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="confirmCobrarBtn">Cobrar</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Seleccionar todos los botones con la clase común
+  const buttons = document.querySelectorAll('.liberar-mesa-btn');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function (event) {
+      event.preventDefault(); // Prevenir el envío normal del formulario
+
+      const mesaId = this.getAttribute('data-id'); // Obtener el ID de la mesa
+      const form = document.getElementById(`liberarMesaForm${mesaId}`);
+
+      fetch(form.action, {
+        method: "POST",
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({}) // Si necesitas enviar datos adicionales, agrégalos aquí
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(data => {
+            throw new Error(data.message || 'No se pudo procesar la solicitud');
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          // Mostrar un mensaje de éxito
+          alert(data.message);
+          location.reload(); // Recargar la página para actualizar el estado de la mesa
+        }
+      })
+      .catch(error => {
+        // Mostrar un mensaje de error en una alerta
+        alert(`Error: ${error.message}`);
+      });
+    });
+  });
+});
+</script>
     
 {% endblock panel-content %}
     

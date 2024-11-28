@@ -1,6 +1,6 @@
 from django.db import models
 from applications.caja.models import Caja, Mesas
-from .managers import ProductosManager, DetallePedidoManager
+from .managers import ProductosManager, DetallePedidoManager, PedidosManager
 # Create your models here.
 
 class Pedidos(models.Model):
@@ -18,14 +18,15 @@ class Pedidos(models.Model):
     ]
 
     caja = models.ForeignKey(Caja, on_delete=models.CASCADE)
-    mesa = models.ForeignKey(Mesas, on_delete=models.CASCADE)
+    mesa = models.ForeignKey(Mesas, on_delete=models.CASCADE, related_name='pedido_mesa')
     tipo_pago_pedido = models.CharField('Tipo de pago', max_length=2, choices=TIPO_PAGO_CHOICES)
     fecha_hs_pedido = models.DateTimeField(auto_now_add=True)
     pedido_listo = models.BooleanField(default=False)
     pagado_pedido = models.BooleanField(default=False)
+    # image = models.ImageField('Imagen', upload_to='cocina', default='brunnete.jpg')
 
 
-    objects = ProductosManager()
+    objects = PedidosManager()
 
     class Meta:
         """Meta definition for Pedidos."""
@@ -52,12 +53,14 @@ class Productos(models.Model):
     existencia_insumo = models.BooleanField(default=True)  # Indica si el insumo está disponible
     categoria = models.CharField('Categoria', max_length=2, choices=TIPO_CATEGORIA_CHOICES)
 
+    objects = ProductosManager()
+
     def __str__(self):
         return self.nombre_prod
     
 
 class DetallePedido(models.Model):
-    pedido = models.ForeignKey(Pedidos, on_delete=models.CASCADE, )
+    pedido = models.ForeignKey(Pedidos, on_delete=models.CASCADE, related_name='pedido_detalle')
     producto = models.ForeignKey(Productos, on_delete=models.CASCADE)
     total_pedido = models.IntegerField()
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -69,7 +72,6 @@ class DetallePedido(models.Model):
 
         verbose_name = 'DetallePedido'
         verbose_name_plural = 'DetallePedidos'
-
 
     def __str__(self):
         return f"{self.producto.nombre_prod} mesa {self.pedido.mesa.num_mesa}"

@@ -65,6 +65,43 @@ class PedidoForm(forms.ModelForm):
             'mesa': forms.Select(
                 attrs = {
 
+                    'class': 'form-select mt-2',
+                }
+            ),
+            'tipo_pago_pedido': forms.Select(
+                attrs = {
+
+                    'class': 'form-select mt-2',
+                }
+            ),
+            'pagado_pedido': forms.CheckboxInput(
+                attrs = {
+
+                    'class': 'form-check-input ',
+                }
+            ),
+            
+            
+            }
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     # Filtrar solo las mesas disponibles
+    #     self.fields['mesa'].queryset = Mesas.objects.filter(mesa_dispnible=True)
+        
+    #     # Set default value for 'mesa' if provided in initial
+    #     if 'mesa' in self.initial:
+    #         self.fields['mesa'].initial = self.initial['mesa']
+
+class PedidoForm2(forms.ModelForm):
+    class Meta:
+        model = Pedidos
+        fields = ['mesa', 'tipo_pago_pedido', 'pagado_pedido']
+
+        widgets = {
+            'mesa': forms.Select(
+                attrs = {
+
                     'class': 'form-select',
                 }
             ),
@@ -87,28 +124,32 @@ class PedidoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Filtrar solo las mesas disponibles
-        self.fields['mesa'].queryset = Mesas.objects.filter(mesa_dispnible=True)
-        
+        self.fields['mesa'].queryset = Mesas.objects.all()
+
 
 class DetallePedidoForm(forms.Form):
 
     producto = forms.ModelChoiceField(
-            queryset=Productos.objects.all(), 
+            queryset=Productos.objects.none(),  # No cargar productos al inicio
             label="Producto",
             widget=forms.Select(attrs={
                 'required': 'required',
-                'class': 'form-select' 
+                'class': 'form-select mt-2',
+                "id":"id_producto"
             })
             )
     total_pedido = forms.IntegerField(
             widget=forms.NumberInput(attrs={
+                'type':'number',
                 'required': 'required',
-                'class': 'form-select',
+                'class': 'form-control mt-2',
                 'min':'1',
                 'value':'1',
                 }),
             label='Cantidad'
         )
+    
+
     
 class DetallePedidoUpdateForm(forms.ModelForm):
     """Form definition for DetallePedido."""

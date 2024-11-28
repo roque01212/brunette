@@ -1,0 +1,119 @@
+<!-- pedido_form.html -->
+{% extends 'panel.html' %}
+
+
+{% block panel-content %}
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">N° de mesa</th>
+      <th scope="col">Nombre Pedido</th>
+      <th scope="col" colspan="3">Accion</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in lista_pedidos %}
+    <tr>
+      <td>{{i.pedido.mesa.num_mesa}} </td>
+      <td>{{i.producto.nombre_prod}} </td>
+
+      {% if i.producto.categoria == '0' %}
+      {{ i.pedido.id }}
+      <td>
+        <form action="{% url 'caja_app:Marcar_Pedido_Listo' i.pedido.id %}" method="POST">{% csrf_token %}
+          <button class="btn btn-success" type="submit">Listo</button>
+        </form>
+
+      </td>
+      {% else %}
+      <td>
+      <button class="btn btn-success" disabled >Pendiente en cocina</button>
+      </td>
+      {% endif %}
+
+      <form action="{% url 'caja_app:Eliminar_Pedido' i.pedido.id %}" method="POST">{% csrf_token %}
+        <td>
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </td>
+      </form>
+      <td>
+        <!-- Botón para cargar el formulario de edición en el modal -->
+        <button type="button" onclick="loadEditForm('{{ i.id }}')" class="btn btn-primary" data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop #editModal">
+          Editar</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Editar Pedido</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="editModalBody">
+        <!-- Aquí se cargará el formulario mediante AJAX -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">Previous</a></li>
+    {% endif %}
+
+    {% for page in paginator.page_range %}
+    {% if page == page_obj.number %}
+    <li class="page-item active"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+    {% else %}
+    <li class="page-item "><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+
+
+<script>
+  function loadEditForm(detalleId) {
+    // Enviar solicitud AJAX para obtener el formulario de edición
+    fetch(`/caja/actualizar-detalle-pedido/${detalleId}/`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Inserta el HTML del formulario en el cuerpo del modal
+        document.getElementById('editModalBody').innerHTML = data.html;
+        // Abre el modal usando Bootstrap 5
+        const editModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+        editModal.show();
+      })
+      .catch(error => console.log('Error en la solicitud AJAX:', error));
+  }
+</script>
+{% endblock panel-content %}

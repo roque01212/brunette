@@ -1,0 +1,26 @@
+{% extends "panel.html" %}
+
+{% load  static %}
+
+
+{% block panel-content %}
+
+<h1>Detalles del Pedido para Mesa {{ mesa.num_mesa }}</h1>
+
+<!-- {% for i in pedidos %}
+    {{i.pedido_listo}}
+{% endfor %}
+     -->
+{% for i in detalles_pedidos %}
+    {{i.producto.nombre_prod}}
+{% endfor %}
+
+
+<!-- Agregar botón para marcar pedidos como listos -->
+<form action="{% url 'cocina_app:Marcar_Pedidos_Listos' mesa.pk %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">Marcar todos como listos</button>
+</form>
+    
+{% endblock panel-content %}
+    
