@@ -4,70 +4,63 @@
 
 {% block panel-content %}
 
-<div class="grid-x grid-margin-x align-center">
-  <h3 class="cell" style="margin-bottom: 1em; text-align: center;">Datos Usuario</h3>  
-  <form class="cell medium-9 grid-x grid-margin-x align-center" method="POST">{% csrf_token %}
+<div class="container mt-5">
+  <h3 class="text-center mb-4">Actualizar Usuario</h3>  
+
+  <!-- Formulario principal -->
+  <form method="POST" class="needs-validation" novalidate>
+      {% csrf_token %}
       
-    <div class="cell medium-12">
-      <label>Email:</label>
-      <div class="input-group">
-        <span class="input-group-label"><i class="fi-mail"></i></span>
-        {{ form.email }}
+      <!-- Email -->
+      <div class="mb-3">
+          <label for="id_email" class="form-label">Correo Electrónico:</label>
+          {{ form.email }}
+          {% for error in form.email.errors %}
+              <div class="text-danger">{{ error }}</div>
+          {% endfor %}
       </div>
-      {% for error in form.email.errors %}
-        <p class="cell" style="color: red;">
-          {{ error|escape }}
-        </p>
-      {% endfor %}
-    </div>
-    <div class="cell medium-6">
-      <label>Nombre:</label>
-      <div class="input-group">
-        <span class="input-group-label"><i class="fi-book"></i></span>
-        {{form.full_name}}
-      </div>
-    </div>
 
-    <div class="cell medium-6">
-      <label>Permisos:</label>
-      <div class="input-group">
-        {{form.ocupation}}
+      <!-- Nombre y Permisos -->
+      <div class="row">
+          <div class="col-md-6 mb-3">
+              <label for="id_full_name" class="form-label">Nombre Completo:</label>
+              {{ form.full_name }}
+          </div>
+          <div class="col-md-6 mb-3">
+              <label for="id_ocupation" class="form-label">Permisos:</label>
+              {{ form.ocupation }}
+          </div>
       </div>
-    </div>
-    <div class="cell medium-6">
-      <label>Genero:</label>
-      <div class="input-group">
-        {{form.genero}}
-      </div>
-    </div>
 
-    <div class="cell medium-6">
-      <label>Fecha de Nacimiento:</label>
-      <div class="input-group">
-        <span class="input-group-label"><i class="fi-calendar"></i></span>
-        {{ form.date_birth }}
+      <!-- Género y Fecha de Nacimiento -->
+      <div class="row">
+          <div class="col-md-6 mb-3">
+              <label for="id_genero" class="form-label">Género:</label>
+              {{ form.genero }}
+          </div>
+          <div class="col-md-6 mb-3">
+              <label for="id_date_birth" class="form-label">Fecha de Nacimiento:</label>
+              {{ form.date_birth }}
+              {% for error in form.date_birth.errors %}
+                  <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+          </div>
       </div>
-      {% for error in form.date_birth.errors %}
-        <p class="cell" style="color: red;">
-          {{ error|escape }}
-        </p>
-      {% endfor %}
-    </div>
 
-    <div class="cell medium-6">
-        <label>Usuario Activo:</label>
-        <div class="input-group">
+      <!-- Usuario Activo -->
+      <div class="mb-3 form-check">
           {{ form.is_active }}
-        </div>
-    </div>
+          <label for="id_is_active" class="form-check-label">¿Usuario Activo?</label>
+      </div>
 
-    <div class="cell medium-10">
-      <button type="submit" class="cell button success">Guardar</button>
+      <div class="text-center mt-4">
+        <!-- Botón de guardar -->
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        
+        <!-- Botón para volver a la lista -->
+        <a href="{% url 'users_app:User-Lista' %}" class="btn btn-secondary ms-3">Volver a la Lista</a>
+        </form>
     </div>
-  </form>
-  <form class="cell medium-5" action="{% url 'users_app:user-delete' object.id %}" method="POST">
-    {% csrf_token %}
-    <button type="submit" class="cell alert button">Eliminar</button>
   </form>
 </div>
 

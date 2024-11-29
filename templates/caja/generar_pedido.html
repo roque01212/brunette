@@ -50,9 +50,9 @@
         <th scope="row">{{ i.pedido.mesa.num_mesa }}</th>
         <td>{{i.producto.nombre_prod }}</td>
         <td>{{ i.total_pedido }}</td>
-        <form action="{% url 'caja_app:Eliminar_Pedido' i.pedido.id %}" method="POST">{% csrf_token %}
+        <form action="{% url 'caja_app:Eliminar_Pedido' i.pedido.id %}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este pedido?');">{% csrf_token %}
           <td>
-            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <button type="submit" class="btn btn-danger" >Eliminar</button>
           <td>
         </form>
         <!-- Botón para cargar el formulario de edición en el modal -->
@@ -66,11 +66,6 @@
     </tbody>
   </table>
 </div>
-
-
-
-
-
 
 
 <!-- Modal -->
@@ -91,7 +86,17 @@
     </div>
   </div>
 </div>
-
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert 
+        {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}" 
+        role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
 
 <script>
   function loadEditForm(detalleId) {
@@ -144,6 +149,35 @@
       .catch(error => console.error('Error:', error));
   });
 
+  document.querySelector('form').addEventListener('submit', function (event) {
+  event.preventDefault(); // Evitar la recarga de página
+
+  fetch(this.action, {
+    method: 'POST',
+    body: new FormData(this),
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}',
+    },
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
+      return response.json(); // Procesar la respuesta JSON
+    })
+    .then(data => {
+      if (data.success) {
+        window.alert(data.message); // Mostrar mensaje de éxito
+        location.reload(); // Recargar la página
+      } else {
+        window.alert(data.message); // Mostrar mensaje de error desde el servidor
+      }
+    })
+    .catch(error => {
+      console.error('Error al enviar el formulario:', error);
+      window.alert(`Ocurrió un error inesperado: ${error.message}`);
+    });
+});
 
 </script>
 

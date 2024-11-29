@@ -1,13 +1,20 @@
-/* Estilos personalizados */
+/* Estilos para la barra lateral */
 .sidebar {
     background-color: #333;
     color: white;
-    height: 100vh;
+    width: 250px; /* Ancho fijo */
+    height: 100vh; /* Altura de la ventana */
     padding: 20px;
+    position: fixed; /* Fijar la barra lateral */
+    top: 0;
+    left: 0;
+    overflow-y: auto; /* Scroll si el contenido es muy grande */
 }
+
 .sidebar h1 {
     color: orange;
 }
+
 .sidebar a {
     color: white;
     display: block;
@@ -15,28 +22,85 @@
     margin: 5px 0;
     text-decoration: none;
 }
+
 .sidebar a:hover {
     background-color: orange;
     color: black;
 }
+
+/* Estilos para la barra superior */
 .navbar {
     background-color: #444;
     color: white;
     padding: 15px;
+    position: fixed; /* Fijar la barra superior */
+    top: 0;
+    left: 250px; /* Ajustar al lado de la barra lateral */
+    right: 0;
+    height: 56px; /* Altura estándar */
+    z-index: 1030; /* Colocarla por encima del contenido */
+    display: flex;
+    align-items: center; /* Centrar verticalmente */
 }
+
 .navbar .btn-salir {
     background-color: orange;
     border: none;
     color: white;
 }
+
+/* Ajuste del contenido principal */
 .content {
     background-color: #c3c6c4;
-    padding: 30px; 
-    
+    margin-top: 56px; /* Dejar espacio para la barra superior */
+    margin-left: 250px; /* Dejar espacio para la barra lateral */
+    padding: 30px;
+    min-height: calc(100vh - 56px); /* Asegurar que el contenido ocupe el espacio restante */
 }
+
 .welcome-msg {
     padding: 15px;
     background-color: #f5deb3;
     border-radius: 5px;
     font-size: 18px;
+}
+
+/* Animación para efectos */
+.fade-in {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        transform: translateX(-250px); /* Ocultar barra lateral */
+        z-index: 1030;
+    }
+
+    .sidebar.active {
+        transform: translateX(0); /* Mostrar barra lateral */
+    }
+
+    .navbar {
+        left: 0; /* Ajustar barra superior al ancho completo */
+    }
+
+    .content {
+        margin-left: 0; /* Contenido ocupa todo el ancho */
+    }
+}
+
+.form-container {
+    min-height: calc(100vh - 56px); /* Ajustar con la barra superior */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

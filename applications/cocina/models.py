@@ -35,7 +35,22 @@ class Pedidos(models.Model):
         verbose_name_plural = 'Pedidoss'
 
     def __str__(self):
-        return f"pedido de la mesa {self.mesa}"
+        return f"pedido de la mesa {self.mesa} fecha{self.fecha_hs_pedido}"
+    
+    def delete(self, *args, **kwargs):
+        """
+        Sobrescribe el método delete para restaurar el stock de los productos.
+        """
+        # Obtener los detalles relacionados usando el related_name 'pedido_detalle'
+        detalles = self.pedido_detalle.all()
+        for detalle in detalles:
+            # Restaurar el stock del producto relacionado
+            detalle.producto.stock_actual_prod += detalle.total_pedido
+            detalle.producto.save()
+
+        # Llamar al método delete original para eliminar el pedido
+        super().delete(*args, **kwargs)
+    
     
 
 
@@ -48,7 +63,7 @@ class Productos(models.Model):
     ]
     nombre_prod = models.CharField(max_length=100)
     precio_prod = models.DecimalField(max_digits=10, decimal_places=2)
-    stock_min_prod = models.PositiveIntegerField()  # Stock mínimo para alerta
+    stock_min_prod = models.PositiveIntegerField(blank=True, null=True)  # Stock mínimo para alerta
     stock_actual_prod = models.PositiveIntegerField()  # Cantidad actual en stock
     existencia_insumo = models.BooleanField(default=True)  # Indica si el insumo está disponible
     categoria = models.CharField('Categoria', max_length=2, choices=TIPO_CATEGORIA_CHOICES)
@@ -75,3 +90,4 @@ class DetallePedido(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre_prod} mesa {self.pedido.mesa.num_mesa}"
+

@@ -1,0 +1,43 @@
+{% extends "panel.html" %}
+{% block panel-content %}
+
+<h1 class="text-center">Detalle de Caja N°{{ caja.id }}</h1>
+
+<div class="card text-white bg-secondary ">
+    <div class="card-header ">
+        <h3>Usuario: {{ caja.user.full_name }}</h3>
+        <p>Fecha Apertura: {{ caja.fecha_hs_aper_caja }}</p>
+        <p>Fecha Cierre: {{ caja.fecha_hs_cierre_caja }}</p>
+        <p>Monto Inicial: ${{ monto_inicial }}</p>
+        <p>Total Ingresos: ${{ caja.total_ingresos }}</p>
+        <p>Total Egresos: ${{ caja.total_egresos }}</p>
+        <p><strong>Efectivo Esperado en Caja:</strong> ${{ efectivo_esperado }}</p>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad Total</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for venta in ventas %}
+        <tr>
+            <td>{{ venta.producto__nombre_prod }}</td>
+            <td>{{ venta.cantidad_total }}</td>
+            <td>${{ venta.subtotal }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="2" class="text-end"><strong>Total Vendido:</strong></td>
+            <td><strong>${{ total_vendido }}</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<a href="{% url 'caja_app:Lista_Ventas' %}" class="btn btn-secondary">Volver</a>
+
+{% endblock panel-content %}

@@ -1,0 +1,26 @@
+{% extends 'panel.html' %}
+
+
+{% block panel-content %}
+
+<div class="container">
+    <h1 class="text-center">{{ titulo }}</h1>
+    <p class="text-center">Análisis del último mes</p>
+    <!-- Botón para descargar el PDF -->
+    <div class="text-center mt-4">
+        <a href="{% url 'caja_app:ranking_torta_pdf' %}" class="btn btn-primary">
+            Descargar PDF
+        </a>
+    </div>
+
+    <!-- Mostrar el gráfico generado -->
+    <div class="text-center">
+        <img src="data:image/png;base64,{{ grafico }}" alt="Gráfico de Ranking">
+    </div>
+
+
+</div>
+
+
+
+{% endblock panel-content %} 
